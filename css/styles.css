@@ -1,0 +1,1325 @@
+/* Advanced panel: lock options + header, scroll body */
+#advancedPanel .content{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+#advOptionsRow{
+  position:sticky;
+  top:0;
+  z-index:2;
+  background:#fff;
+  padding-top:4px;
+  padding-bottom:4px;
+  border-bottom:1px solid #eef1f5;
+}
+#advTableWrap{
+  max-height: 60vh;
+  overflow:auto;
+  border-radius:10px;
+  border:1px solid #e4e7ec;
+  overscroll-behavior: contain; /* smoother scroll */
+}
+#advTableWrap thead th{
+  position: sticky;
+  top: 0;              /* <- always stick to top of the scroll area */
+  background:#f8fafc;
+  z-index: 1;
+}
+
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f6f7f9;color:#222}
+/* ===== CAPSTANAG HEADER + TOOL SELECTOR ===== */
+.site-header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:#000;
+}
+
+.header-inner{
+  max-width:1100px;
+  margin:0 auto;
+  padding:14px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+}
+
+/* Logo only */
+.brand-link{
+  display:flex;
+  align-items:center;
+  text-decoration:none;
+}
+
+.brand-logo{
+  height:34px;
+  width:auto;
+  display:block;
+}
+
+/* Tool navigation */
+.tool-nav{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:14px;
+  color:#e5e7eb;
+}
+
+.tool-label{
+  opacity:0.9;
+  font-weight:500;
+  white-space:nowrap;
+  margin-right:4px;
+}
+
+.tool-link{
+  padding:5px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.35);
+  color:#e5e7eb;
+  text-decoration:none;
+  font-size:13px;
+  white-space:nowrap;
+}
+
+.tool-link:hover{
+  background:rgba(255,255,255,0.12);
+}
+
+.tool-link.active{
+  background:#ffffff;
+  color:#000;
+  border-color:#ffffff;
+}
+
+/* Print button */
+.print-btn{
+  height:32px;
+  padding:0 14px;
+  border:1px solid #d9dde3;
+  border-radius:8px;
+  background:#fff;
+  color:#000;
+  cursor:pointer;
+  font-size:12px;
+  white-space:nowrap;
+}
+
+/* Mobile layout */
+@media (max-width:720px){
+  .header-inner{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+  }
+
+  .header-left{
+    flex-wrap:wrap;
+    gap:10px;
+  }
+
+  .tool-nav{
+    flex-wrap:wrap;
+    gap:8px;
+  }
+
+  .print-btn{
+    align-self:flex-end;
+  }
+}
+
+/* Header controls (Units / Pressure / Outlet / Mode) */
+.header-controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+  justify-content:flex-end;
+  font-size:12px;
+}
+
+.header-control{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.header-control select{
+  height:28px;
+}
+
+/* Hide metric pressure by default; JS will set inline display when needed */
+#metricPressureWrap{
+  display:none;
+}
+
+/* On very narrow screens, let the pairs wrap nicely */
+@media (max-width:600px){
+  .header-controls{
+    justify-content:flex-start;
+  }
+}
+
+.container{max-width:1100px;margin:20px auto;padding:0 16px}
+.panel{background:#fff;border:1px solid #e4e7ec;border-radius:12px;box-shadow:0 2px 4px rgba(0,0,0,.05);margin-bottom:16px}
+.panel .header{
+  padding:12px 14px;
+  border-bottom:1px solid #eef1f5;
+  font-weight:700;
+  background:#f0f4fa;
+  color:#0b2b4c;
+
+  /* changed from flex to grid */
+  display:grid;
+  grid-template-columns:auto 1fr;  /* title | controls on wide screens */
+  align-items:center;
+  column-gap:12px;
+}
+.panel .content{padding:14px}
+.form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+/* Advanced options grid (desktop default) */
+.adv-grid{
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  align-items:end;
+  margin-bottom:8px;
+}
+/* Header controls container (Units / Outlet / Mode) */
+.header-controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:flex-end;
+}
+
+.header-control{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+/* Mobile: stack title, then stack Units / Outlet / Mode full-width */
+@media (max-width:700px){
+  .panel .header{
+    grid-template-columns:1fr;   /* title on its own row */
+  }
+
+  .panel .header > span{
+    margin-bottom:6px;
+  }
+
+  .header-controls{
+    justify-content:flex-start;
+    flex-direction:column;   /* stack the controls */
+    align-items:flex-start;
+    width:100%;             /* take full panel width */
+  }
+
+  .header-control{
+    width:100%;             /* each control row is full width */
+  }
+
+  .header-control select{
+    width:100%;             /* dropdown cannot be wider than panel */
+  }
+}
+
+.form-item{display:flex;flex-direction:column;gap:6px}
+label{font-size:12px;color:#444}
+input,select{height:36px;padding:6px 10px;border:1px solid #d9dde3;border-radius:8px;background:#fff}
+.hint{font-size:12px;color:#667085}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.card{background:#fff;border:1px solid #e4e7ec;border-radius:12px;padding:14px}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;background:#eef4ff;color:#134fba}
+.kv{display:grid;grid-template-columns:1fr auto;gap:6px;font-size:13px}
+.kv div{display:flex;justify-content:space-between;border-bottom:1px dashed #eef1f5;padding:4px 0}
+.help{font-size:12px;color:#667085}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{text-align:left;padding:10px;border-bottom:1px solid #eef1f5;font-size:13px;vertical-align:top}
+.table th{background:#f8fafc;font-weight:600}
+.status{font-size:12px;padding:2px 8px;border-radius:10px;display:inline-block}
+.ok{background:#ecfdf3;color:#027a48;border:1px solid #a7f3d0}
+.warn{background:#fff7ed;color:#b45309;border:1px solid #fed7aa}
+.bad{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
+.footer{color:#98a2b3;font-size:12px;text-align:center;padding:20px 6px}
+@media (max-width:900px){   .form-grid{grid-template-columns:1fr 1fr}   .cards{grid-template-columns:1fr}   /* Advanced row: only two columns on small screens */   .adv-grid{grid-template-columns:1fr 1fr} }  /* Extra-small phones: stack advanced controls in one column */ @media (max-width:600px){   .adv-grid{grid-template-columns:1fr} }
+/* Card spacing & single-line values */
+.kv .value { text-align:right; white-space:nowrap; }
+.kv .label span { white-space:nowrap; }
+.kv .label { color:#555; }
+.metric-big { font-size:20px; font-weight:700; line-height:1; }
+.metric-sub { font-size:12px; color:#667085; }
+
+/* Print cleanup */
+@media print {
+  header { position: static; background:#fff; color:#000; border-bottom:1px solid #ddd; }
+  .panel { box-shadow:none; border-color:#ccc; page-break-inside: avoid; }
+  #printBtn { display:none; }
+  body { background:#fff; }
+}
+
+/* Top Picks: center tiles + keep labels on one line */
+.metric-box{display:flex;flex-direction:column;align-items:center}
+.metric-big{font-size:20px;font-weight:700;line-height:1}
+.metric-sub{font-size:12px;color:#667085}
+.kv .value{ text-align:right; white-space:nowrap; }
+.kv .label span{ white-space:nowrap; }
+
+/* Size filter dropdown */
+#sizeFilterWrap{position:relative}
+#sizeFilterBtn{height:36px;padding:6px 10px;border:1px solid #d9dde3;border-radius:8px;background:#fff;cursor:pointer}
+#sizeFilterPanel{position:absolute;top:66px;left:0;z-index:5;display:none;min-width:260px;
+  background:#fff;border:1px solid #d9dde3;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.08);padding:10px}
+#sizeFilterPanel.open{display:block}
+#sizeFilterList{max-height:220px;overflow:auto;padding:4px 0}
+#sizeFilterList label{display:flex;align-items:center;gap:8px;padding:6px 8px;font-size:13px}
+#sizeFilterPanel .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+#sizeFilterApply,#sizeFilterClear{height:30px;padding:0 10px;border:1px solid #d9dde3;border-radius:8px;background:#fff;cursor:pointer}
+
+/* Make helper text reserve equal space under every control */
+.form-item .hint{
+  display:block;
+  min-height:18px;
+  line-height:18px;
+  margin-top:6px;
+}
+
+/* ==== Disk mode: group stripes by disk (Blue/White alternating) ==== */
+.disk-row-blue  { background: rgba(29, 78, 216, 0.08); } /* #1D4ED8 @ 8% */
+.disk-left-blue { border-left: 6px solid #1D4ED8; }
+
+.disk-row-white  { background: #fff; }
+.disk-left-white { border-left: 6px solid #fff; }        /* blends with row */
+
+.disk-pill {
+  display:inline-block;
+  font-variant-numeric: tabular-nums;
+  padding:2px 6px;
+  border-radius:6px;
+  border:1px solid rgba(0,0,0,0.15);
+  background:#fff;
+}
+/* ===== MOBILE TABLE BEHAVIOR ===== */
+@media (max-width:900px){
+
+  /* No inner vertical scroll on mobile */
+  #advTableWrap{
+    max-height:none;
+    overflow-y:visible;
+    overflow-x:auto;
+  }
+
+  /* Turn OFF sticky header on mobile */
+  #advTableWrap thead,
+  #advTableWrap thead th{
+    position:static;
+    top:auto;
+  }
+
+  /* Turn OFF sticky advanced options row on mobile */
+  #advOptionsRow{
+    position:static;
+    top:auto;
+  }
+}
+
+
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.header-language{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:14px;
+  color:#e5e7eb;
+}
+
+.header-language label{
+  color:#e5e7eb;
+  opacity:0.9;
+  font-size:14px;
+  font-weight:500;
+  white-space:nowrap;
+}
+
+.header-language select{
+  height:32px;
+  padding:0 14px;
+  border-radius:999px;
+  border:1px solid #ffffff;
+  background:#ffffff;
+  color:#000000;
+  font-size:13px;
+  cursor:pointer;
+}
+
+@media (max-width:720px){
+  .header-right{
+    width:100%;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+  }
+
+  .header-language{
+    width:100%;
+  }
+}
+
+/* ===== ASJ / ANSDC integrated selector ===== */
+.asj-panel-header{
+  grid-template-columns:auto auto !important;
+  justify-content:space-between;
+}
+.asj-close-btn,
+.asj-select-btn{
+  height:32px;
+  padding:0 12px;
+  border:1px solid #0b2b4c;
+  border-radius:8px;
+  background:#0b2b4c;
+  color:#fff;
+  cursor:pointer;
+  font-size:12px;
+  white-space:nowrap;
+}
+.asj-close-btn{
+  background:#fff;
+  color:#0b2b4c;
+}
+.asj-card-actions{
+  margin-top:10px;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.asj-context{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-bottom:12px;
+}
+.asj-context-card{
+  border:1px solid #e4e7ec;
+  border-radius:10px;
+  padding:10px;
+  background:#f8fafc;
+}
+.asj-context-card .label{
+  display:block;
+  font-size:11px;
+  color:#667085;
+  margin-bottom:4px;
+}
+.asj-context-card .value{
+  font-weight:700;
+  color:#0b2b4c;
+}
+.asj-filter-grid{
+  margin-bottom:10px;
+}
+.asj-summary{
+  margin:8px 0;
+}
+.asj-table-wrap{
+  overflow:auto;
+  border:1px solid #e4e7ec;
+  border-radius:10px;
+}
+.asj-table-wrap thead th{
+  position:sticky;
+  top:0;
+  z-index:1;
+}
+.asj-droplet-pill{
+  display:inline-block;
+  min-width:34px;
+  text-align:center;
+  padding:2px 8px;
+  border-radius:999px;
+  background:#eef4ff;
+  color:#134fba;
+  border:1px solid #c7d7fe;
+  font-size:12px;
+  font-weight:700;
+}
+.asj-muted{color:#667085;font-size:12px;}
+.asj-warning{color:#b45309;font-size:12px;}
+@media (max-width:900px){
+  .asj-context{grid-template-columns:1fr 1fr;}
+}
+@media (max-width:600px){
+  .asj-context{grid-template-columns:1fr;}
+  .asj-panel-header{grid-template-columns:1fr !important; gap:8px;}
+  .asj-close-btn{width:100%;}
+}
+
+/* ASJ nozzle + droplet profile refinements */
+.asj-nozzle-name{
+  margin-top:3px;
+  color:#344054;
+  font-size:12px;
+}
+.asj-nozzle-material{
+  color:#667085;
+  font-size:12px;
+}
+.asj-nozzle-meta{
+  color:#667085;
+  font-size:12px;
+  white-space:nowrap;
+}
+.asj-meta-sep{
+  color:#98a2b3;
+  padding:0 4px;
+}
+.asj-droplet-profile{
+  display:flex;
+  flex-direction:row;
+  flex-wrap:wrap;
+  gap:6px;
+  min-width:260px;
+  max-width:520px;
+}
+.asj-pressure-droplet{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  white-space:nowrap;
+  padding:3px 7px 3px 3px;
+  border:1px solid #e4e7ec;
+  border-radius:999px;
+  background:#fff;
+}
+.asj-pressure-label{
+  color:#475467;
+  font-size:12px;
+}
+.asj-context-card .value strong,
+.asj-table-wrap td strong{
+  color:#0b2b4c;
+}
+.asj-table-wrap td{
+  vertical-align:top;
+}
+@media (max-width:700px){
+  .asj-droplet-profile{
+    min-width:220px;
+  }
+}
+
+/* ASJ final-column droplet profile */
+.asj-droplet-profile-column{
+  flex-direction:column;
+  flex-wrap:nowrap;
+  align-items:flex-start;
+  gap:5px;
+  min-width:155px;
+  max-width:210px;
+}
+.asj-droplet-profile-column .asj-pressure-droplet{
+  width:max-content;
+  max-width:100%;
+}
+
+/* ASJ v9: consistent pressure order + compact horizontal droplet profile */
+.asj-droplet-profile-strip{
+  display:flex;
+  flex-direction:row;
+  flex-wrap:nowrap;
+  align-items:stretch;
+  gap:4px;
+  min-width:520px;
+  max-width:none;
+  overflow-x:auto;
+  padding-bottom:2px;
+}
+.asj-droplet-profile-strip .asj-pressure-droplet{
+  display:inline-flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  min-width:44px;
+  padding:3px 4px;
+  border-radius:8px;
+  white-space:nowrap;
+}
+.asj-droplet-pressure-stack{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  line-height:1.05;
+}
+.asj-droplet-pressure-primary{
+  font-size:10.5px;
+  font-weight:700;
+  color:#344054;
+}
+.asj-droplet-pressure-secondary{
+  font-size:9.5px;
+  color:#667085;
+}
+.asj-droplet-profile-strip .asj-droplet-pill{
+  min-width:28px;
+  text-align:center;
+  justify-content:center;
+  padding:1px 6px;
+  font-size:11px;
+  line-height:1.15;
+}
+.asj-table-wrap #asjResultsTable th:last-child,
+.asj-table-wrap #asjResultsTable td:last-child{
+  min-width:540px;
+}
+@media (max-width:900px){
+  .asj-droplet-profile-strip{
+    min-width:440px;
+  }
+  .asj-table-wrap #asjResultsTable th:last-child,
+  .asj-table-wrap #asjResultsTable td:last-child{
+    min-width:460px;
+  }
+}
+
+/* ASJ v11c: infographic table cleanup */
+.asj-nozzle-cell{
+  display:block;
+  min-width:280px;
+}
+.asj-nozzle-text strong{
+  font-size:13px;
+}
+.asj-nozzle-family{
+  margin-top:2px;
+  color:#475467;
+  font-size:12px;
+  font-weight:600;
+}
+.asj-row-vmd{
+  justify-self:end;
+  min-width:74px;
+  padding:6px 8px;
+  border:1px solid #e4e7ec;
+  border-radius:10px;
+  background:#f8fafc;
+  text-align:center;
+}
+.asj-row-vmd-value{
+  display:block;
+  font-size:17px;
+  line-height:1;
+  font-weight:800;
+  color:#0b2b4c;
+}
+.asj-row-vmd-label{
+  display:block;
+  margin-top:3px;
+  font-size:10px;
+  line-height:1.1;
+  color:#667085;
+  white-space:nowrap;
+}
+.asj-table-wrap #asjResultsTable th:first-child,
+.asj-table-wrap #asjResultsTable td:first-child{
+  min-width:360px;
+}
+.asj-table-wrap #asjResultsTable th:last-child,
+.asj-table-wrap #asjResultsTable td:last-child{
+  min-width:540px;
+}
+@media (max-width:700px){
+  .asj-nozzle-cell{
+    grid-template-columns:1fr;
+  }
+  .asj-row-vmd{
+    justify-self:start;
+  }
+}
+
+/* V11C: row-level VMD removed; VMD now lives in the ASJ context strip. */
+
+
+/* V12 final ASJ polish */
+.asj-vmd-context-card .value{
+  display:block;
+  font-size:16px;
+  font-weight:800;
+  line-height:1.1;
+}
+
+.asj-vmd-context-card .hint{
+  display:block;
+  margin-top:3px;
+  min-height:0;
+  line-height:1.15;
+  font-size:11px;
+  color:#667085;
+}
+
+#asjResultsTable{
+  table-layout:auto;
+}
+
+#asjResultsTable th:first-child,
+#asjResultsTable td:first-child{
+  width:42%;
+}
+
+#asjResultsTable th:last-child,
+#asjResultsTable td:last-child{
+  width:58%;
+}
+
+#asjResultsTable tbody td:first-child{
+  position:relative;
+  padding-right:16px;
+}
+
+#asjResultsTable tbody td:first-child::after{
+  content:"";
+  position:absolute;
+  right:0;
+  top:18%;
+  height:64%;
+  border-right:1px solid #d9dde3;
+}
+
+#asjResultsTable tbody td:last-child{
+  padding-left:14px;
+}
+
+.asj-droplet-profile,
+.asj-droplet-strip,
+.asj-droplet-pills{
+  justify-content:center;
+  align-items:center;
+}
+
+.asj-droplet-profile{
+  width:100%;
+  margin-left:0;
+}
+
+.asj-droplet-strip{
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  overflow-x:auto;
+  padding-bottom:2px;
+}
+
+.asj-droplet-pill,
+.asj-droplet-tile{
+  flex:0 0 auto;
+  text-align:center;
+}
+
+.asj-droplet-pill .pressure,
+.asj-droplet-tile .pressure{
+  display:block;
+  font-size:10px;
+  line-height:1.1;
+}
+
+.asj-droplet-pill .cat,
+.asj-droplet-tile .cat{
+  display:block;
+  font-size:12px;
+  line-height:1.1;
+  font-weight:800;
+}
+
+
+/* V13 clarification: droplet profile left-aligned, vertically centered, less whitespace */
+#asjResultsTable{
+  table-layout:fixed;
+  width:100%;
+}
+
+#asjResultsTable th:first-child,
+#asjResultsTable td:first-child{
+  width:34%;
+}
+
+#asjResultsTable th:last-child,
+#asjResultsTable td:last-child{
+  width:66%;
+}
+
+#asjResultsTable tbody td{
+  vertical-align:middle;
+}
+
+#asjResultsTable tbody td:first-child{
+  padding-right:10px;
+}
+
+#asjResultsTable tbody td:last-child{
+  padding-left:10px;
+}
+
+.asj-droplet-profile,
+.asj-droplet-strip,
+.asj-droplet-pills{
+  justify-content:flex-start !important;
+  align-items:center !important;
+}
+
+.asj-droplet-profile{
+  width:100%;
+  display:flex;
+  align-items:center;
+  min-height:100%;
+}
+
+.asj-droplet-strip{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  overflow-x:visible;
+  padding-bottom:0;
+  max-width:100%;
+}
+
+.asj-droplet-pill,
+.asj-droplet-tile{
+  flex:0 0 auto;
+  min-width:44px;
+  padding:4px 6px;
+  text-align:center;
+}
+
+.asj-droplet-pill .pressure,
+.asj-droplet-tile .pressure{
+  font-size:9px;
+  line-height:1.05;
+  white-space:nowrap;
+}
+
+.asj-droplet-pill .cat,
+.asj-droplet-tile .cat{
+  font-size:11px;
+  line-height:1.05;
+  white-space:nowrap;
+}
+
+
+/* V14: reduce excessive white gap between ASJ Nozzle and Droplet Profile */
+#asjResultsTable th:first-child,
+#asjResultsTable td:first-child{
+  width:27%;
+}
+
+#asjResultsTable th:last-child,
+#asjResultsTable td:last-child{
+  width:73%;
+}
+
+#asjResultsTable tbody td:first-child{
+  padding-right:6px;
+}
+
+#asjResultsTable tbody td:last-child{
+  padding-left:6px;
+}
+
+#asjResultsTable tbody td:first-child::after{
+  right:-1px;
+  top:14%;
+  height:72%;
+}
+
+
+/* ===== PHASE 1 UI polish: ASJ readability + mobile fit ===== */
+.asj-vmd-context-card .label{
+  display:block;
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+/* Grow droplet pressure pills vertically, not horizontally. */
+.asj-droplet-profile-strip .asj-pressure-droplet{
+  min-width:44px;
+  min-height:58px;
+  padding:7px 4px;
+  gap:5px;
+  border-radius:10px;
+}
+.asj-droplet-pressure-primary{
+  font-size:12px;
+  line-height:1.05;
+  font-weight:800;
+}
+.asj-droplet-pressure-secondary{
+  font-size:10px;
+  line-height:1.05;
+}
+.asj-droplet-profile-strip .asj-droplet-pill{
+  min-width:30px;
+  padding:2px 6px;
+  font-size:12px;
+  line-height:1.1;
+}
+
+/* Keep droplet profile left-aligned and vertically centered in the row. */
+#asjResultsTable tbody td{
+  vertical-align:middle;
+}
+.asj-droplet-profile-strip{
+  align-items:center;
+  padding-top:2px;
+  padding-bottom:2px;
+}
+
+/* Mobile portrait: give the droplet profile priority and keep nozzle text from colliding. */
+@media (max-width:600px){
+  .asj-table-wrap{
+    overflow-x:auto;
+  }
+
+  #asjResultsTable{
+    table-layout:fixed;
+    min-width:560px;
+  }
+
+  #asjResultsTable th:first-child,
+  #asjResultsTable td:first-child{
+    width:22%;
+    min-width:118px;
+    max-width:118px;
+  }
+
+  #asjResultsTable th:last-child,
+  #asjResultsTable td:last-child{
+    width:78%;
+    min-width:430px;
+  }
+
+  #asjResultsTable tbody td:first-child{
+    overflow:hidden;
+    padding-right:4px;
+  }
+
+  .asj-nozzle-cell{
+    min-width:0;
+    max-width:108px;
+    overflow:hidden;
+  }
+
+  .asj-nozzle-text{
+    max-width:108px;
+    overflow:hidden;
+  }
+
+  .asj-nozzle-text strong,
+  .asj-nozzle-name,
+  .asj-nozzle-family,
+  .asj-nozzle-material,
+  .asj-nozzle-meta{
+    display:block;
+    max-width:108px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+
+  .asj-nozzle-name,
+  .asj-nozzle-material,
+  .asj-nozzle-meta{
+    font-size:11px;
+  }
+
+  .asj-droplet-profile-strip{
+    min-width:420px;
+    gap:5px;
+  }
+
+  .asj-droplet-profile-strip .asj-pressure-droplet{
+    min-width:44px;
+    min-height:62px;
+    padding-top:8px;
+    padding-bottom:8px;
+  }
+}
+
+
+/* ===== Phase 2: ASJ multi-select dropdown filters ===== */
+.asj-hidden-native-select{
+  display:none !important;
+}
+.asj-multi-filter-control{
+  position:relative;
+  width:100%;
+}
+.asj-multi-filter-btn{
+  width:100%;
+  height:36px;
+  padding:6px 10px;
+  border:1px solid #d9dde3;
+  border-radius:8px;
+  background:#fff;
+  color:#222;
+  text-align:left;
+  cursor:pointer;
+  font-size:13px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.asj-multi-filter-btn::after{
+  content:'▾';
+  float:right;
+  color:#667085;
+}
+.asj-multi-filter-panel{
+  display:none;
+  position:absolute;
+  top:calc(100% + 6px);
+  left:0;
+  z-index:20;
+  width:100%;
+  min-width:220px;
+  max-height:260px;
+  overflow:auto;
+  background:#fff;
+  border:1px solid #d9dde3;
+  border-radius:10px;
+  box-shadow:0 8px 24px rgba(0,0,0,.10);
+  padding:8px;
+}
+.asj-multi-filter-control.open .asj-multi-filter-panel{
+  display:block;
+}
+.asj-multi-filter-list label{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 4px;
+  font-size:13px;
+  color:#222;
+  cursor:pointer;
+}
+.asj-multi-filter-list input{
+  width:16px;
+  height:16px;
+  flex:0 0 auto;
+}
+.asj-multi-filter-actions{
+  display:flex;
+  justify-content:flex-end;
+  padding-top:6px;
+  margin-top:4px;
+  border-top:1px solid #eef1f5;
+}
+.asj-multi-filter-clear{
+  height:28px;
+  padding:0 10px;
+  border:1px solid #d9dde3;
+  border-radius:8px;
+  background:#fff;
+  cursor:pointer;
+  font-size:12px;
+}
+
+
+/* ===== System mode / Conventional setup state ===== */
+.control-disabled{
+  opacity:0.48;
+}
+.control-disabled label{
+  color:#667085;
+}
+.control-disabled input,
+.control-disabled select,
+input:disabled,
+select:disabled{
+  background:#f2f4f7;
+  color:#667085;
+  cursor:not-allowed;
+}
+
+
+/* ===== Conventional mode top cards ===== */
+.conv-card-title{
+  margin-top:8px;
+  font-size:14px;
+  font-weight:700;
+  color:#0b2b4c;
+}
+.conv-card-subtitle{
+  margin-top:10px;
+  font-size:12px;
+  color:#667085;
+  font-weight:600;
+}
+.conv-speed-pills{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:8px;
+  margin-top:8px;
+}
+.conv-speed-pill{
+  border:1px solid #d9dde3;
+  border-radius:12px;
+  background:#f8fafc;
+  padding:10px 6px;
+  text-align:center;
+  min-height:64px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:4px;
+}
+.conv-speed-pill-label{
+  font-size:11px;
+  color:#667085;
+  white-space:nowrap;
+}
+.conv-speed-pill strong{
+  font-size:16px;
+  line-height:1.05;
+  color:#0b2b4c;
+}
+@media (max-width:420px){
+  .conv-speed-pill strong{font-size:14px;}
+  .conv-speed-pill-label{font-size:10px;}
+}
+
+
+/* ===== Conventional tip curve graph ===== */
+.conv-chart-card{
+  margin-bottom:10px;
+  border:1px solid #e4e7ec;
+  border-radius:12px;
+  background:#fff;
+  overflow:auto;
+  padding:8px;
+}
+.conv-tip-curve{
+  width:100%;
+  min-width:520px;
+  height:auto;
+  display:block;
+}
+.conv-chart-bg{fill:#ffffff;}
+.conv-chart-tick line,
+.conv-chart-x-tick line{
+  stroke:#eef1f5;
+  stroke-width:1;
+}
+.conv-chart-tick text,
+.conv-chart-x-tick text{
+  fill:#667085;
+  font-size:11px;
+}
+.conv-chart-axis{
+  stroke:#98a2b3;
+  stroke-width:1.25;
+}
+.conv-chart-line{
+  fill:none;
+  stroke:#0b2b4c;
+  stroke-width:3;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.conv-chart-point circle{
+  fill:#0b2b4c;
+}
+.conv-chart-point text{
+  fill:#0b2b4c;
+  font-size:11px;
+  font-weight:700;
+}
+.conv-chart-target{
+  stroke:#b45309;
+  stroke-width:1.5;
+  stroke-dasharray:5 5;
+}
+.conv-chart-target-label{
+  fill:#b45309;
+  font-size:12px;
+  font-weight:700;
+}
+.conv-chart-axis-label{
+  fill:#344054;
+  font-size:12px;
+  font-weight:700;
+}
+.conv-reference-table-wrap{
+  overflow:auto;
+  margin-top:8px;
+}
+.conv-reference-table th,
+.conv-reference-table td{
+  white-space:nowrap;
+}
+@media (max-width:600px){
+  .conv-chart-card{padding:6px;}
+  .conv-tip-curve{min-width:500px;}
+}
+
+/* ===== PWM envelope graph prototype ===== */
+.pwm-chart-card{
+  margin-top:8px;
+  border:1px solid #e4e7ec;
+  border-radius:12px;
+  background:#fff;
+  overflow:hidden;
+}
+.pwm-envelope-curve{
+  display:block;
+  width:100%;
+  height:auto;
+  max-height:320px;
+}
+.pwm-chart-bg{
+  fill:#fbfcfe;
+}
+.pwm-chart-axis{
+  stroke:#344054;
+  stroke-width:1.2;
+}
+.pwm-chart-tick line,
+.pwm-chart-x-tick line{
+  stroke:#e4e7ec;
+  stroke-width:1;
+}
+.pwm-chart-tick text,
+.pwm-chart-x-tick text{
+  fill:#667085;
+  font-size:10px;
+}
+.pwm-chart-envelope{
+  fill:#dbeafe;
+  opacity:.78;
+}
+.pwm-chart-line{
+  fill:none;
+  stroke:#0b2b4c;
+  stroke-width:2.4;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.pwm-chart-line-lower{
+  stroke:#0b2b4c;
+  stroke-dasharray:none;
+}
+.pwm-chart-target{
+  stroke:#b42318;
+  stroke-width:1.5;
+  stroke-dasharray:5 4;
+}
+.pwm-chart-target-label{
+  fill:#b42318;
+  font-size:11px;
+  font-weight:600;
+}
+.pwm-chart-point circle{
+  fill:#fff;
+  stroke:#0b2b4c;
+  stroke-width:1.5;
+}
+.pwm-chart-axis-label,
+.pwm-chart-legend,
+.pwm-chart-legend-sub{
+  fill:#344054;
+  font-size:11px;
+  font-weight:600;
+}
+.pwm-chart-legend{
+  font-size:12px;
+  fill:#0b2b4c;
+}
+.pwm-chart-legend-sub{
+  fill:#667085;
+  font-weight:500;
+}
+
+/* PWM envelope v2: speed on X, boom pressure on Y */
+.pwm-chart-band{
+  stroke:none;
+  opacity:.72;
+}
+.pwm-chart-band-green{
+  fill:#dcfce7;
+}
+.pwm-chart-band-yellow{
+  fill:#fef3c7;
+}
+.pwm-pressure-slice line{
+  stroke:#0b2b4c;
+  stroke-width:2.2;
+  stroke-dasharray:none;
+}
+.pwm-pressure-slice text{
+  fill:#0b2b4c;
+  font-size:10.5px;
+  font-weight:600;
+}
+
+.pwm-chart-edge{
+  stroke-width:2.4;
+}
+.pwm-pressure-slice-label{
+  dominant-baseline:middle;
+}
+.pwm-pressure-slice-range{
+  fill:#344054;
+  font-size:10px;
+  font-weight:600;
+}
+
+.pwm-chart-curve-label{
+  fill:#0b2b4c;
+  font-size:10.5px;
+  font-weight:700;
+}
+
+/* PWM graph lock-in refinements */
+.pwm-pressure-slice line{
+  stroke:#2563eb;
+  stroke-width:2;
+  stroke-dasharray:6 5;
+}
+.pwm-pressure-slice-label{
+  fill:#1d4ed8;
+  font-size:10.5px;
+  font-weight:700;
+}
+.pwm-pressure-slice-range{
+  fill:#344054;
+  font-size:10px;
+  font-weight:600;
+}
+.pwm-ideal-window line{
+  stroke:#027a48;
+  stroke-width:3;
+  stroke-linecap:round;
+}
+.pwm-ideal-window circle{
+  fill:#ffffff;
+  stroke:#027a48;
+  stroke-width:2;
+}
+.pwm-ideal-window-label{
+  fill:#027a48;
+  font-size:10.5px;
+  font-weight:700;
+}
+.pwm-ideal-window-speed{
+  fill:#027a48;
+  font-size:10px;
+  font-weight:700;
+}
